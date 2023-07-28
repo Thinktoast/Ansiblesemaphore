@@ -1,6 +1,6 @@
 ---
 - name: Check Disk Usage and Send Alert
-  hosts: your_target_host  # Replace with the hostname or IP address of your Linux machine
+  hosts: all  # Replace with the hostname or IP address of your Linux machine
   gather_facts: yes
 
   tasks:
