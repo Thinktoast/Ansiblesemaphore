@@ -1,23 +1,13 @@
 ---
-- name: Check Disk Usage and Send Alert
-  hosts: all  # Replace with the hostname or IP address of your Linux machine
-  gather_facts: yes
-
+- name: Check Disk Usage on Linux Machines
+  hosts: all
+  gather_facts: true
   tasks:
-    - name: Get disk usage facts
-      shell: df -hP
-      register: disk_usage
+    - name: Execute 'df' command
+      shell: df -h
+      register: disk_usage_result
+      changed_when: false
 
-    - name: Calculate disk usage percentage
-      set_fact:
-        usage_percent: "{{ disk_usage.stdout_lines[1].split()[4] | replace('%','') | int }}"
-
-    - name: Send an alert email if usage above 85%
-      when: usage_percent > 85
-      mail:
-        host: mx.eventstime.fr  # Replace with your SMTP server's hostname or IP address
-        port: 25  # Replace with the SMTP port (e.g., 25, 587, etc.)
-        subject: "Disk Usage Alert on {{ inventory_hostname }}"
-        body: "Disk usage on {{ inventory_hostname }} is above 85%. Current usage: {{ usage_percent }}%"
-        from: taskboard@techprojects.fr  # Replace with the sender email address
-        to: hergi.projectsit@gmail.com
+    - name: Display Disk Usage
+      debug:
+        var: disk_usage_result.stdout_lines
